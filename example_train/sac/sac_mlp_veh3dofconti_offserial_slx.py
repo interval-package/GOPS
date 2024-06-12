@@ -106,7 +106,6 @@ if __name__ == "__main__":
 
     ################################################
     # 3. Parameters for RL algorithm
-    parser.add_argument("--value_learning_rate", type=float, default=1e-3)
     parser.add_argument("--q_learning_rate", type=float, default=1e-3)
     parser.add_argument("--policy_learning_rate", type=float, default=1e-3)
     parser.add_argument("--alpha_learning_rate", type=float, default=1e-3)

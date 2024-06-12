@@ -62,12 +62,15 @@ class SimuVeh3dofcontiSurrCstr(SimuVeh3dofconti):
         self.surr_state = np.zeros((surr_veh_num, 5), dtype=np.float32)
         self.veh_length = veh_length
         self.veh_width = veh_width
-        self.info_dict.update(
-            {
-                "surr_state": {"shape": (surr_veh_num, 5), "dtype": np.float32},
-                "constraint": {"shape": (1,), "dtype": np.float32},
-            }
-        )
+    
+    @property
+    def additional_info(self) -> Dict[str, Dict]:
+        additional_info = super().additional_info
+        additional_info.update({
+            "surr_state": {"shape": (self.surr_veh_num, 5), "dtype": np.float32},
+            "constraint": {"shape": (1,), "dtype": np.float32},
+        })
+        return additional_info
 
     def reset(
         self,

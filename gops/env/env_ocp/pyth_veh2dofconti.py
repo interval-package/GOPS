@@ -72,6 +72,10 @@ class VehicleDynamicsData:
 
 
 class SimuVeh2dofconti(PythBaseEnv):
+    metadata = {
+        "render.modes": ["human", "rgb_array"],
+    }
+
     def __init__(
         self,
         pre_horizon: int = 10,
@@ -110,20 +114,20 @@ class SimuVeh2dofconti(PythBaseEnv):
         self.t = None
         self.ref_points = None
 
-        self.info_dict = {
+        self.seed()
+
+    @property
+    def additional_info(self) -> Dict[str, Dict]:
+        additional_info = super().additional_info
+        additional_info.update({
             "state": {"shape": (self.state_dim,), "dtype": np.float32},
             "ref_points": {"shape": (self.pre_horizon + 1, 2), "dtype": np.float32},
             "path_num": {"shape": (), "dtype": np.uint8},
             "u_num": {"shape": (), "dtype": np.uint8},
             "ref_time": {"shape": (), "dtype": np.float32},
             "ref": {"shape": (2,), "dtype": np.float32},
-        }
-
-        self.seed()
-
-    @property
-    def additional_info(self) -> Dict[str, Dict]:
-        return self.info_dict
+        })
+        return additional_info
 
     def reset(
         self,

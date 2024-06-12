@@ -68,16 +68,19 @@ class SimuVeh3dofcontiDetour(SimuVeh3dofconti):
         self.surr_state = np.zeros((surr_veh_num, 5), dtype=np.float32)
         self.veh_length = veh_length
         self.veh_width = veh_width
-        self.info_dict.update(
-            {
-                "surr_state": {"shape": (surr_veh_num, 5), "dtype": np.float32},
-                "constraint": {"shape": (3,), "dtype": np.float32},
-            }
-        )
 
         self.lane_width = 4.0
         self.upper_bound = 0.5 * self.lane_width
         self.lower_bound = -1.5 * self.lane_width
+
+    @property
+    def additional_info(self) -> Dict[str, Dict]:
+        additional_info = super().additional_info
+        additional_info.update({
+            "surr_state": {"shape": (self.surr_veh_num, 5), "dtype": np.float32},
+            "constraint": {"shape": (1,), "dtype": np.float32},
+        })
+        return additional_info
 
     def reset(
         self,
@@ -203,11 +206,6 @@ class SimuVeh3dofcontiDetour(SimuVeh3dofconti):
                 min_dist = min(min_dist, np.min(dist))
         ego_to_veh_violation = 2 * r - min_dist
 
-        # road boundary violation
-        ego_upper_y = max(ego_center[0, 1], ego_center[1, 1]) + r
-        ego_lower_y = min(ego_center[0, 1], ego_center[1, 1]) - r
-        upper_bound_violation = ego_upper_y - self.upper_bound
-        lower_bound_violation = self.lower_bound - ego_lower_y
         return np.array([ego_to_veh_violation], dtype=np.float32)
 
     def compute_reward(self, action: np.ndarray) -> float:
@@ -237,7 +235,6 @@ class SimuVeh3dofcontiDetour(SimuVeh3dofconti):
             (np.abs(x - ref_x) > 10)
             | (np.abs(y - ref_y) > 10)
             | (np.abs(angle_normalize(phi - ref_phi)) > np.pi)
-            # | (max(self.get_constraint()) > 1.0)
         )
         return done
     

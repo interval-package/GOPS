@@ -1,5 +1,6 @@
-from typing import Dict, Optional, Sequence, Tuple
+from typing import Dict, Optional, Sequence, Tuple, Union
 
+from gops.env.env_gen_ocp.pyth_base import State
 import numpy as np
 from gym import spaces
 from gops.env.env_gen_ocp.robot.veh3dof import angle_normalize
@@ -175,6 +176,13 @@ class Veh3DoFTrackingDetour(Veh3DoFTracking):
         ax.plot(upper_x, upper_y, "k")
         ax.plot(lower_x, lower_y, "k")
 
+    @property
+    def additional_info(self) -> Dict[str, Union[State[np.ndarray], Dict]]:
+        additional_info = super().additional_info
+        additional_info.update({
+            "constraint": {"shape": (1,), "dtype": np.float32},
+        })
+        return additional_info
 
 def env_creator(**kwargs):
     return Veh3DoFTrackingDetour(**kwargs)

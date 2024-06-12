@@ -62,12 +62,15 @@ class SimuVeh3dofcontiSurrCstrPenalty(SimuVeh3dofconti):
         self.surr_state = np.zeros((surr_veh_num, 5), dtype=np.float32)
         self.veh_length = veh_length
         self.veh_width = veh_width
-        self.info_dict.update(
-            {
-                "surr_state": {"shape": (surr_veh_num, 5), "dtype": np.float32},
-                "constraint": {"shape": (surr_veh_num,), "dtype": np.float32},
-            }
-        )
+    
+    @property
+    def additional_info(self) -> Dict[str, Dict]:
+        additional_info = super().additional_info
+        additional_info.update({
+            "surr_state": {"shape": (self.surr_veh_num, 5), "dtype": np.float32},
+            "constraint": {"shape": (self.surr_veh_num,), "dtype": np.float32},
+        })
+        return additional_info
 
     def reset(
         self,
@@ -126,12 +129,9 @@ class SimuVeh3dofcontiSurrCstrPenalty(SimuVeh3dofconti):
             )
 
     def compute_reward(self, action: np.ndarray) -> float:
-        # x, y, phi, u, _, w = self.state
-        # ref_x, ref_y, ref_phi, ref_u = self.ref_points[0]
         obs = self.get_obs()
         delta_x, delta_y, delta_phi, delta_u, v, w = obs[0], obs[1], obs[2], obs[3], obs[4], obs[5]
         steer, a_x = action
-        # dis = circle center distance - 2 * radius
         dis = - self.get_constraint()[0]
         collision_bound = 0.5
         dis_to_tanh = np.maximum(8 - 8 * dis / collision_bound, 0)
@@ -148,37 +148,17 @@ class SimuVeh3dofcontiSurrCstrPenalty(SimuVeh3dofconti):
                 + 0.5 * a_x ** 2
                 + 15.0 * punish_dis
         )
-        # return -(
-        #         0.5 * delta_x ** 2
-        #         + 0.5 * delta_y ** 2
-        #         + 0.1 * delta_phi ** 2
-        #         + 0.1 * delta_u ** 2
-        #         + 0.5 * v ** 2
-        #         + 0.5 * w ** 2
-        #         + 0.5 * steer ** 2
-        #         + 0.5 * a_x ** 2
-        #         + 15.0 * punish_dis
-        # )
-
 
 
     def judge_done(self) -> bool:
-        x, y, phi = self.state[:3]
-        ref_x, ref_y, ref_phi = self.ref_points[0, :3]
+        _, y, phi = self.state[:3]
+        _, ref_y, ref_phi = self.ref_points[0, :3]
         dis = - self.get_constraint()
         done = (
-                # (np.abs(x - ref_x) > 10)
-                (np.abs(y - ref_y) > 5)
-                | (np.abs(angle_normalize(phi - ref_phi)) > np.pi)
-                | (np.any(dis < 0))
+            (np.abs(y - ref_y) > 5)
+            | (np.abs(angle_normalize(phi - ref_phi)) > np.pi)
+            | (np.any(dis < 0))
         )
-        # if done:
-        #     print('x - ref_x = ', np.abs(x - ref_x))
-        #     print('y - ref_y = ', np.abs(y - ref_y))
-        #     print('np.abs(angle_normalize(phi - ref_phi) = ', np.abs(angle_normalize(phi - ref_phi)))
-        #     print('dis = ', dis)
-        #     print('sur_x', self.surr_state)
-
         return done
 
     def get_obs(self) -> np.ndarray:

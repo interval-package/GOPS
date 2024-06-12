@@ -50,15 +50,11 @@ def register(
     global registry
 
     new_spec = Spec(env_id=env_id, entry_point=entry_point, kwargs=kwargs)
-
-    # print(registry.keys())
-    # if new_spec.env_id in registry:
-    #     print(f"Overriding environment {new_spec.env_id} already in registry.")
     
     registry[new_spec.env_id] = new_spec
 
 
-# regist env
+# register env
 env_dir_list = [e for e in os.listdir(env_path) if e.startswith("env_")]
 
 for env_dir_name in env_dir_list:

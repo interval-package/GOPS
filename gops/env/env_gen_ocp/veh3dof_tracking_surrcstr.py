@@ -1,5 +1,6 @@
-from typing import Dict, Optional, Sequence, Tuple
+from typing import Dict, Optional, Sequence, Tuple, Union
 
+from gops.env.env_gen_ocp.pyth_base import State
 import numpy as np
 from gym import spaces
 from gops.env.env_gen_ocp.robot.veh3dof import angle_normalize
@@ -94,8 +95,6 @@ class Veh3DoFTrackingSurrCstr(Veh3DoFTracking):
             ),
             axis=1,
         )
-        # print("new ego_center: ", ego_center)
-        # print("new surr_center: ", surr_center)
 
         min_dist = np.inf
         for i in range(2):
@@ -107,7 +106,6 @@ class Veh3DoFTrackingSurrCstr(Veh3DoFTracking):
                 )
                 min_dist = min(min_dist, np.min(dist))
         ego_to_veh_violation = 2 * r - min_dist
-        # print("new ego_to_veh_violation: ", ego_to_veh_violation)
         return np.array([ego_to_veh_violation], dtype=np.float32)
 
     def _get_obs(self) -> np.ndarray:
@@ -128,11 +126,6 @@ class Veh3DoFTrackingSurrCstr(Veh3DoFTracking):
         x, y, phi, u, _, w = self.robot.state
         ref_x, ref_y, ref_phi, ref_u = self.context.state.reference[0]
         steer, a_x = action
-        # violation = self._get_constraint()
-        # threshold = -0.1
-        # punish = np.maximum(violation - threshold, 0).sum()
-        # if punish > 0:
-        #     punish += 1.0
         return -(
             0.04 * (x - ref_x) ** 2
             + 0.04 * (y - ref_y) ** 2
@@ -175,6 +168,14 @@ class Veh3DoFTrackingSurrCstr(Veh3DoFTracking):
         lower_y = np.ones_like(lower_x) * self.context.lower_bound
         ax.plot(upper_x, upper_y, "k")
         ax.plot(lower_x, lower_y, "k")
+
+    @property
+    def additional_info(self) -> Dict[str, Union[State[np.ndarray], Dict]]:
+        additional_info = super().additional_info
+        additional_info.update({
+            "constraint": {"shape": (1,), "dtype": np.float32},
+        })
+        return additional_info
 
 
 def env_creator(**kwargs):

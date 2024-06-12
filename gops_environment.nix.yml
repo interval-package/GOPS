@@ -1,12 +1,14 @@
 name: gops
 
 channels:
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
   - defaults
 
 dependencies:
   - python=3.8
-  - pytorch>=1.13.0
+  - pytorch::pytorch>=1.13.0
+  - pytorch::torchvision>=0.14.0
+  - pytorch::torchaudio>=0.13.0
+  - pytorch::cpuonly
   - numpy>1.16.0
   - ray-default>=1.0.0
   - pandas
@@ -14,8 +16,7 @@ dependencies:
   - matplotlib
   - seaborn
   - scipy
-  - cyipopt
-  - llvm-openmp<16
+  - llvm-openmp
   - pip
   - pip:
     - gym==0.23.1
@@ -25,5 +26,4 @@ dependencies:
     - pyglet
     - slxpy
     - openpyxl
-    - intel-openmp
     - pytest

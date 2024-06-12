@@ -235,7 +235,7 @@ class Env(gym.Env, metaclass=ABCMeta):
         )
 
     @property
-    def additional_info(self) -> Dict[str, State[np.ndarray]]:
+    def additional_info(self) -> Dict[str, Union[State[np.ndarray], Dict]]:
         return {
             "state": self.get_zero_state(),
         }

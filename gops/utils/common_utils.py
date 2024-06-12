@@ -293,7 +293,7 @@ def get_args_from_json(json_file_path, args_dict):
     import json
 
     summary_filename = json_file_path
-    with open(summary_filename) as f:
+    with open(summary_filename, encoding="utf-8") as f:
         summary_dict = json.load(fp=f)
 
     for key in summary_dict.keys():

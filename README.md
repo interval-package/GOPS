@@ -53,6 +53,10 @@ conda activate gops
 ```bash
 pip install -e .
 ```
+4. (Optional) if you plan to use the MPC-based optimal controller implemented in GOPS, install `cyipopt`:
+```bash
+conda install -c conda-forge cyipopt
+```
 
 ## Documentation
 The tutorials and API documentation are hosted on [gops.readthedocs.io](https://gops.readthedocs.io/en/latest/).

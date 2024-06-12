@@ -1,5 +1,6 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
+from gops.env.env_gen_ocp.pyth_base import State
 import numpy as np
 from gops.env.env_gen_ocp.context.ref_traj_err import RefTrajErrContext
 from gops.env.env_gen_ocp.veh3dof_tracking import Veh3DoFTracking
@@ -46,6 +47,13 @@ class Veh3DoFTrackingError(Veh3DoFTracking):
         ], dtype=np.float32)
         return constraint
 
+    @property
+    def additional_info(self) -> Dict[str, Union[State[np.ndarray], Dict]]:
+        additional_info = super().additional_info
+        additional_info.update({
+            "constraint": {"shape": (2,), "dtype": np.float32},
+        })
+        return additional_info
 
 def env_creator(**kwargs):
     return Veh3DoFTrackingError(**kwargs)

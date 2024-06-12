@@ -10,7 +10,7 @@
 #  Update: 2022-10-06, Yujie Yang: create base environment
 #  Update: 2022-10-13, Wenxuan Wang: add has_optimal_controller and control_policy
 
-from typing import Any, Optional, Sequence
+from typing import Any, Dict, Optional, Sequence
 
 import gym
 import numpy as np
@@ -76,3 +76,7 @@ class PythBaseEnv(gym.Env):
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
+
+    @property
+    def additional_info(self) -> Dict[str, Dict]:
+        return {}

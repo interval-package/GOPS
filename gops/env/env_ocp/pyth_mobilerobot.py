@@ -22,6 +22,10 @@ gym.logger.setLevel(gym.logger.ERROR)
 
 
 class PythMobilerobot(PythBaseEnv):
+    metadata = {
+        "render.modes": ["human", "rgb_array"],
+    }
+    
     def __init__(
         self, **kwargs: Any,
     ):
@@ -217,7 +221,20 @@ class PythMobilerobot(PythBaseEnv):
                     arrows[k + 1].set_data(
                         arrow_pos(state[idx, 3 + (k + 1) * 5 : 3 + (k + 1) * 5 + 5])
                     )
-            plt.pause(0.02)
+            plt.pause(0.01)
+        
+        if mode == "rgb_array":
+            fig = plt.gcf()
+            fig.canvas.draw()
+            image_from_plot = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
+            image_from_plot = image_from_plot.reshape(
+                fig.canvas.get_width_height()[::-1] + (3,)
+            )
+            plt.pause(0.01)
+            return image_from_plot
+        elif mode == "human":
+            plt.pause(0.01)
+            plt.show()
 
     def render_init(self, n_window: int = 1):
 
@@ -250,7 +267,6 @@ class PythMobilerobot(PythBaseEnv):
                     arrows.append(ax.plot([], [], "blue")[0])
                 artists.append([circles, arrows])
         self.artists = artists
-        plt.ion()
 
     def close(self):
         plt.close("all")

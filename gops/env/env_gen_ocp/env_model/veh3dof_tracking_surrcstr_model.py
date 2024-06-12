@@ -81,7 +81,7 @@ class Veh3DoFTrackingSurrCstrModel(EnvModel):
         return torch.concat((ego_obs, ref_obs, surr_obs), 1)
 
     def get_constraint(self, state: State) -> torch.Tensor:
-        # collision detection using bicircle model
+        # collision detection using bicycle model
         # distance from vehicle center to front/rear circle center
         d = (self.veh_length - self.veh_width) / 2
         # circle radius

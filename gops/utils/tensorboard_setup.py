@@ -48,7 +48,7 @@ def read_tensorboard(path):
     return output_dict
 
 
-def start_tensorboard(logdir, port=DEFAULT_TB_PORT):
+def start_tensorboard(logdir, port=DEFAULT_TB_PORT, autoopen=False):
     kill_port(port)
 
     sys_name = platform.system()
@@ -64,9 +64,10 @@ def start_tensorboard(logdir, port=DEFAULT_TB_PORT):
         print("Unsupported os")
 
     os.system(cmd_line)
-    time.sleep(5)
 
-    webbrowser.open("http://localhost:{}/".format(port))
+    if autoopen:
+        time.sleep(5)
+        webbrowser.open("http://localhost:{}/".format(port))
 
 
 def add_scalars(tb_info, writer, step):
@@ -161,6 +162,7 @@ tb_tags = {
     "loss_actor_reward": "Loss/Actor reward loss-RL iter",
     "loss_actor_constraint": "Loss/Actor constraint loss-RL iter",
     "loss_critic": "Loss/Critic loss-RL iter",
+    "loss_scenery": "Loss/Scenery loss-RL iter",
     "alg_time": "Time/Algorithm time [ms]-RL iter",
     "sampler_time": "Time/Sampler time [ms]-RL iter",
     "critic_avg_value": "Train/Critic avg value-RL iter",

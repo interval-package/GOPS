@@ -15,6 +15,7 @@
 __all__ = ["ApproxContainer", "SAC"]
 
 import time
+import math
 from copy import deepcopy
 from typing import Any, Optional, Tuple
 
@@ -78,8 +79,8 @@ class SAC(AlgorithmBase):
 
     :param float gamma: discount factor.
     :param float tau: param for soft update of target network.
-    :param bool auto_alpha: whether to adjust temperature automatically.
     :param float alpha: initial temperature.
+    :param bool auto_alpha: whether to adjust temperature automatically.
     :param Optional[float] target_entropy: target entropy for automatic
         temperature adjustment.
     """
@@ -89,24 +90,24 @@ class SAC(AlgorithmBase):
         index: int = 0,
         gamma: float = 0.99,
         tau: float = 0.005,
+        alpha: float = math.e,
         auto_alpha: bool = True,
-        alpha: float = 0.2,
         target_entropy: Optional[float] = None,
         **kwargs: Any,
     ):
         super().__init__(index, **kwargs)
         self.networks = ApproxContainer(**kwargs)
+        self.networks.log_alpha.data.fill_(math.log(alpha))
         self.gamma = gamma
         self.tau = tau
         self.auto_alpha = auto_alpha
-        self.alpha = alpha
         if target_entropy is None:
             target_entropy = -kwargs["action_dim"]
         self.target_entropy = target_entropy
 
     @property
     def adjustable_parameters(self):
-        return ("gamma", "tau", "auto_alpha", "alpha", "target_entropy")
+        return ("gamma", "tau", "alpha", "auto_alpha", "target_entropy")
 
     def local_update(self, data: DataDict, iteration: int) -> dict:
         tb_info = self._compute_gradient(data, iteration)
@@ -147,14 +148,11 @@ class SAC(AlgorithmBase):
         self._update(iteration)
 
     def _get_alpha(self, requires_grad: bool = False):
-        if self.auto_alpha:
-            alpha = self.networks.log_alpha.exp()
-            if requires_grad:
-                return alpha
-            else:
-                return alpha.item()
+        alpha = self.networks.log_alpha.exp()
+        if requires_grad:
+            return alpha
         else:
-            return self.alpha
+            return alpha.item()
 
     def _compute_gradient(self, data: DataDict, iteration: int):
         start_time = time.time()

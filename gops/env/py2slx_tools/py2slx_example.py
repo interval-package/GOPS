@@ -15,13 +15,13 @@
     simulink project files
 """
 
-from py2slx import Py2slxRuner
+from gops.env.py2slx_tools.py2slx import Py2slxRunner
 
-runer = Py2slxRuner(
+runner = Py2slxRunner(
     log_policy_dir_list=[r"D:\2_Genjin\THU\Code\gops\results\PPO\221109-211134"],
     trained_policy_iteration_list=["520_opt"],
     export_controller_name=["NN_controller_PPO"],
     save_path=[r"C:\Users\Genjin Xie\Desktop\GOPS_test\vehicle3dof"],
 )
 
-runer.py2simulink()
+runner.py2simulink()

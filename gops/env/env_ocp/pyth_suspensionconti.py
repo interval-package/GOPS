@@ -20,7 +20,7 @@ from gops.env.env_ocp.pyth_base_env import PythBaseEnv
 gym.logger.setLevel(gym.logger.ERROR)
 
 
-class _GymSuspensionconti(PythBaseEnv):
+class PythSuspensionconti(PythBaseEnv):
     def __init__(self, **kwargs):
         """
         you need to define parameters here
@@ -31,7 +31,7 @@ class _GymSuspensionconti(PythBaseEnv):
             init_high = np.array([0.05, 0.5, 0.05, 1.0], dtype=np.float32)
             init_low = -init_high
             work_space = np.stack((init_low, init_high))
-        super(_GymSuspensionconti, self).__init__(work_space=work_space, **kwargs)
+        super(PythSuspensionconti, self).__init__(work_space=work_space, **kwargs)
 
         # define common parameters here
         self.is_adversary = kwargs["is_adversary"]
@@ -293,4 +293,4 @@ def dist_func_sine_noise(time):
 
 
 def env_creator(**kwargs):
-    return _GymSuspensionconti(**kwargs)
+    return PythSuspensionconti(**kwargs)

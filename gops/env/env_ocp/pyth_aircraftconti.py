@@ -20,7 +20,7 @@ from gops.env.env_ocp.pyth_base_env import PythBaseEnv
 gym.logger.setLevel(gym.logger.ERROR)
 
 
-class _GymAircraftconti(PythBaseEnv):
+class PythAircraftconti(PythBaseEnv):
     def __init__(self, **kwargs):
         """
         you need to define parameters here
@@ -31,7 +31,7 @@ class _GymAircraftconti(PythBaseEnv):
             init_high = np.array([0.3, 0.6, 0.3], dtype=np.float32)
             init_low = -init_high
             work_space = np.stack((init_low, init_high))
-        super(_GymAircraftconti, self).__init__(work_space=work_space, **kwargs)
+        super(PythAircraftconti, self).__init__(work_space=work_space, **kwargs)
 
         # define common parameters here
         self.is_adversary = kwargs["is_adversary"]
@@ -228,4 +228,4 @@ class _GymAircraftconti(PythBaseEnv):
 
 
 def env_creator(**kwargs):
-    return _GymAircraftconti(**kwargs)
+    return PythAircraftconti(**kwargs)

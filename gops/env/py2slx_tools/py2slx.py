@@ -10,6 +10,7 @@
 #  Update Date: 2022-10-20, Genjin Xie: Creat policy export and matlab check modular
 
 import argparse
+import importlib
 import os
 import torch
 import winreg
@@ -22,7 +23,7 @@ from gops.utils.gops_path import camel2underline
 from gops.env.py2slx_tools.export import check_jit_compatibility, export_model
 
 
-class Py2slxRuner:
+class Py2slxRunner:
     """
      GOPS tool for put trained policy back into Simulink for closed-loop validation and check whether user's
      matlab version is correct.
@@ -83,7 +84,7 @@ class Py2slxRuner:
         # Create policy
         alg_name = self.args["algorithm"]
         alg_file_name = camel2underline(alg_name)
-        file = __import__(alg_file_name)
+        file = importlib.import_module("gops.algorithm." + alg_file_name)
         ApproxContainer = getattr(file, "ApproxContainer")
         networks = ApproxContainer(**self.args)
         print("Create {}-policy successfully!".format(alg_name))

@@ -71,7 +71,7 @@ class VehicleDynamicsData:
         return np.array(next_state, dtype=np.float32)
 
 
-class SimuVeh2dofconti(PythBaseEnv):
+class PythVeh2dofconti(PythBaseEnv):
     metadata = {
         "render.modes": ["human", "rgb_array"],
     }
@@ -90,7 +90,7 @@ class SimuVeh2dofconti(PythBaseEnv):
             init_high = np.array([1, np.pi / 6, 0.1, 0.1], dtype=np.float32)
             init_low = -init_high
             work_space = np.stack((init_low, init_high))
-        super(SimuVeh2dofconti, self).__init__(work_space=work_space, **kwargs)
+        super(PythVeh2dofconti, self).__init__(work_space=work_space, **kwargs)
 
         self.vehicle_dynamics = VehicleDynamicsData()
         self.ref_traj = MultiRefTrajData(path_para, u_para)
@@ -322,4 +322,4 @@ def env_creator(**kwargs):
     """
     make env `pyth_veh2dofconti`
     """
-    return SimuVeh2dofconti(**kwargs)
+    return PythVeh2dofconti(**kwargs)

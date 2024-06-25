@@ -13,10 +13,10 @@ from typing import Any, Dict, Optional
 
 import numpy as np
 
-from gops.env.env_ocp.pyth_veh2dofconti import SimuVeh2dofconti
+from gops.env.env_ocp.pyth_veh2dofconti import PythVeh2dofconti
 
 
-class SimuVeh2dofcontiErrCstr(SimuVeh2dofconti):
+class PythVeh2dofcontiErrCstr(PythVeh2dofconti):
     def __init__(
         self,
         pre_horizon: int = 10,
@@ -50,4 +50,4 @@ class SimuVeh2dofcontiErrCstr(SimuVeh2dofconti):
 
 
 def env_creator(**kwargs):
-    return SimuVeh2dofcontiErrCstr(**kwargs)
+    return PythVeh2dofcontiErrCstr(**kwargs)

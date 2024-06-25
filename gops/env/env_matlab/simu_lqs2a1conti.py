@@ -18,14 +18,14 @@ from gops.env.env_ocp.pyth_base_data import PythBaseEnv
 import numpy as np
 
 
-class Lqs2a1(PythBaseEnv):
+class SimuLqs2a1(PythBaseEnv):
     def __init__(self, **kwargs: Any):
         work_space = kwargs.pop("work_space", None)
         if work_space is None:
             init_high = np.array([1, 1], dtype=np.float32)
             init_low = -init_high
             work_space = np.stack((init_low, init_high))
-        super(Lqs2a1, self).__init__(work_space=work_space, **kwargs)
+        super(SimuLqs2a1, self).__init__(work_space=work_space, **kwargs)
 
         spec = EnvSpec(
             id="SimuLqs2a1Conti-v0",
@@ -77,4 +77,4 @@ class Lqs2a1(PythBaseEnv):
 
 
 def env_creator(**kwargs):
-    return Lqs2a1(**kwargs)
+    return SimuLqs2a1(**kwargs)

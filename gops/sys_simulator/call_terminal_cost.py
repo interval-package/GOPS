@@ -11,6 +11,7 @@
 
 
 from gops.utils.common_utils import get_args_from_json
+from gops.utils.gops_path import camel2underline
 import torch
 import os
 import argparse
@@ -28,7 +29,8 @@ def load_args(log_policy_dir):
 def load_apprfunc(log_policy_dir, trained_policy_iteration):
     # Create apprfunc
     args = load_args(log_policy_dir)
-    ApproxContainer = getattr(importlib.import_module(f"gops.algorithm.{args['algorithm'].lower()}"), "ApproxContainer")
+    algo_file_name = camel2underline(args["algorithm"])
+    ApproxContainer = getattr(importlib.import_module(f"gops.algorithm.{algo_file_name}"), "ApproxContainer")
     networks = ApproxContainer(**args)
     # Load trained apprfunc
     log_path = log_policy_dir + "/apprfunc/apprfunc_{}.pkl".format(trained_policy_iteration)

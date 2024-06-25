@@ -20,7 +20,7 @@ from gops.env.env_ocp.pyth_base_env import PythBaseEnv
 gym.logger.setLevel(gym.logger.ERROR)
 
 
-class _GymOscillatorconti(PythBaseEnv):
+class PythOscillatorconti(PythBaseEnv):
     def __init__(self, **kwargs):
         """
         you need to define parameters here
@@ -31,7 +31,7 @@ class _GymOscillatorconti(PythBaseEnv):
             init_high = np.array([1.5, 1.5], dtype=np.float32)
             init_low = -init_high
             work_space = np.stack((init_low, init_high))
-        super(_GymOscillatorconti, self).__init__(work_space=work_space, **kwargs)
+        super(PythOscillatorconti, self).__init__(work_space=work_space, **kwargs)
 
         # define common parameters here
         self.is_adversary = kwargs["is_adversary"]
@@ -218,4 +218,4 @@ class _GymOscillatorconti(PythBaseEnv):
 
 
 def env_creator(**kwargs):
-    return _GymOscillatorconti(**kwargs)
+    return PythOscillatorconti(**kwargs)

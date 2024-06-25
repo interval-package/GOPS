@@ -51,7 +51,7 @@ class VehicleDynamicsModel(VehicleDynamicsData):
         return torch.stack(next_state, 1)
 
 
-class Veh2dofcontiModel(PythBaseModel):
+class PythVeh2dofcontiModel(PythBaseModel):
     def __init__(
         self,
         pre_horizon: int = 10,
@@ -171,4 +171,4 @@ def env_model_creator(**kwargs):
     """
     make env model `pyth_veh2dofconti`
     """
-    return Veh2dofcontiModel(**kwargs)
+    return PythVeh2dofcontiModel(**kwargs)

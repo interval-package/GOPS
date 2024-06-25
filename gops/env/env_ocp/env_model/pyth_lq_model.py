@@ -12,7 +12,7 @@
 
 
 from gops.env.env_ocp.resources import lq_configs
-from gops.env.env_ocp.resources.lq_base import LqModel
+from gops.env.env_ocp.resources.lq_base import PythLqModel
 
 
 def env_model_creator(**kwargs):
@@ -31,4 +31,4 @@ def env_model_creator(**kwargs):
     else:
         raise RuntimeError("lq_config invalid")
 
-    return LqModel(config, kwargs.get("device", None))
+    return PythLqModel(config, kwargs.get("device", None))

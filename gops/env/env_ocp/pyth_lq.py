@@ -11,7 +11,7 @@
 #  Update Date: 2022-10-24, Yujie Yang: add wrapper
 
 from gops.env.env_ocp.resources import lq_configs
-from gops.env.env_ocp.resources.lq_base import LqEnv
+from gops.env.env_ocp.resources.lq_base import PythLqEnv
 
 
 def env_creator(**kwargs):
@@ -32,4 +32,4 @@ def env_creator(**kwargs):
         raise RuntimeError("lq_config invalid")
     lq_configs.check_lq_config(config)
 
-    return LqEnv(config, **kwargs)
+    return PythLqEnv(config, **kwargs)

@@ -141,7 +141,7 @@ class LQDynamics:
         return reward
 
 
-class LqEnv(PythBaseEnv):
+class PythLqEnv(PythBaseEnv):
     metadata = {
         "render.modes": ["human", "rgb_array"],
     }
@@ -152,7 +152,7 @@ class LqEnv(PythBaseEnv):
             init_mean = np.array(config["init_mean"], dtype=np.float32)
             init_std = np.array(config["init_std"], dtype=np.float32)
             work_space = np.stack((init_mean - 3 * init_std, init_mean + 3 * init_std))
-        super(LqEnv, self).__init__(work_space=work_space, **kwargs)
+        super(PythLqEnv, self).__init__(work_space=work_space, **kwargs)
 
         self.is_adversary = kwargs.get("is_adversary", False)
         self.is_constraint = kwargs.get("is_constraint", False)
@@ -314,7 +314,7 @@ class LqEnv(PythBaseEnv):
         plt.clf()
 
 
-class LqModel(PythBaseModel):
+class PythLqModel(PythBaseModel):
     def __init__(
         self, config: dict, device: Union[torch.device, str, None] = None,
     ):
@@ -361,8 +361,8 @@ def test_check():
     from gops.env.inspector.env_data_checker import check_env0
     from gops.env.inspector.env_model_checker import check_model0
 
-    env = LqEnv(config_s3a1)
-    model = LqModel(config_s3a1)
+    env = PythLqEnv(config_s3a1)
+    model = PythLqModel(config_s3a1)
     check_env0(env)
     check_model0(env, model)
 
@@ -370,7 +370,7 @@ def test_check():
 def test_env():
     from gops.env.env_ocp.resources.lq_configs import config_s5a1
 
-    env = LqEnv(config_s5a1)
+    env = PythLqEnv(config_s5a1)
     env.reset()
     print(env.has_optimal_controller)
     print(env.control_matrix)

@@ -17,7 +17,7 @@ import torch
 
 from gops.env.env_ocp.env_model.pyth_veh3dofconti_model import (
     VehicleDynamicsModel,
-    Veh3dofcontiModel,
+    PythVeh3dofcontiModel,
     angle_normalize,
 )
 from gops.env.env_ocp.resources.ref_traj_model import MultiRefTrajModel
@@ -39,7 +39,7 @@ class SurrVehicleModel:
         return torch.cat((next_x, next_y, next_phi, u, delta), dim=-1)
 
 
-class Veh3dofcontiSurrCstrPenaltyModel(Veh3dofcontiModel):
+class PythVeh3dofcontiSurrCstrPenaltyModel(PythVeh3dofcontiModel):
     def __init__(
         self,
         pre_horizon: int,
@@ -54,7 +54,7 @@ class Veh3dofcontiSurrCstrPenaltyModel(Veh3dofcontiModel):
         self.state_dim = 6
         self.ego_obs_dim = 6
         self.ref_obs_dim = 4
-        super(Veh3dofcontiModel, self).__init__(
+        super(PythVeh3dofcontiModel, self).__init__(
             obs_dim=self.ego_obs_dim + self.ref_obs_dim * pre_horizon + surr_veh_num * 4,
             action_dim=2,
             dt=0.1,
@@ -262,4 +262,4 @@ def ego_vehicle_coordinate_transform(
     return ref_x_tf, ref_y_tf, ref_phi_tf
 
 def env_model_creator(**kwargs):
-    return Veh3dofcontiSurrCstrPenaltyModel(**kwargs)
+    return PythVeh3dofcontiSurrCstrPenaltyModel(**kwargs)

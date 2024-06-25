@@ -13,11 +13,11 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import torch
 
-from gops.env.env_ocp.env_model.pyth_veh2dofconti_model import Veh2dofcontiModel
+from gops.env.env_ocp.env_model.pyth_veh2dofconti_model import PythVeh2dofcontiModel
 from gops.utils.gops_typing import InfoDict
 
 
-class Veh2dofcontiErrCstrModel(Veh2dofcontiModel):
+class PythVeh2dofcontiErrCstrModel(PythVeh2dofcontiModel):
     def __init__(
         self,
         pre_horizon: int,
@@ -50,4 +50,4 @@ class Veh2dofcontiErrCstrModel(Veh2dofcontiModel):
 
 
 def env_model_creator(**kwargs):
-    return Veh2dofcontiErrCstrModel(**kwargs)
+    return PythVeh2dofcontiErrCstrModel(**kwargs)

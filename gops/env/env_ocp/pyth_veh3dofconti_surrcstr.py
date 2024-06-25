@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 import gym
 import numpy as np
 
-from gops.env.env_ocp.pyth_veh3dofconti import SimuVeh3dofconti, angle_normalize, ego_vehicle_coordinate_transform
+from gops.env.env_ocp.pyth_veh3dofconti import PythVeh3dofconti, angle_normalize, ego_vehicle_coordinate_transform
 
 
 @dataclass
@@ -37,7 +37,7 @@ class SurrVehicleData:
         self.phi = angle_normalize(self.phi)
 
 
-class SimuVeh3dofcontiSurrCstr(SimuVeh3dofconti):
+class PythVeh3dofcontiSurrCstr(PythVeh3dofconti):
     def __init__(
         self,
         pre_horizon: int = 10,
@@ -214,4 +214,4 @@ class SimuVeh3dofcontiSurrCstr(SimuVeh3dofconti):
             ))
 
 def env_creator(**kwargs):
-    return SimuVeh3dofcontiSurrCstr(**kwargs)
+    return PythVeh3dofcontiSurrCstr(**kwargs)

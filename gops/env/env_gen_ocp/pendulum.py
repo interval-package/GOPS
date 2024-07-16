@@ -55,7 +55,7 @@ class Pendulum(Env):
 
         self.last_u = None
 
-        return self._get_obs(), {}
+        return self._get_obs(), self._get_info()
 
     def _get_obs(self):
         theta, thetadot = self.robot.state

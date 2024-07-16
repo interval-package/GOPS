@@ -10,8 +10,6 @@
 #  Update Date: 2021-03-05, Wenxuan Wang: create example
 
 import argparse
-import os
-import numpy as np
 
 from gops.create_pkg.create_alg import create_alg
 from gops.create_pkg.create_buffer import create_buffer
@@ -22,7 +20,6 @@ from gops.create_pkg.create_trainer import create_trainer
 from gops.utils.init_args import init_args
 from gops.utils.plot_evaluation import plot_all
 from gops.utils.tensorboard_setup import start_tensorboard, save_tb_to_csv
-
 
 
 if __name__ == "__main__":
@@ -37,7 +34,7 @@ if __name__ == "__main__":
     parser.add_argument("--seed", default=12345, help="Global seed")
     ################################################
     # 1. Parameters for environment
-    parser.add_argument("--reward_scale", type=float, default=0.2, help="reward scale factor")
+    parser.add_argument("--reward_scale", type=float, default=1.0, help="reward scale factor")
     parser.add_argument("--is_render", type=bool, default=False, help="Draw environment animation")
     parser.add_argument("--is_adversary", type=bool, default=False, help="Adversary training")
 
@@ -78,6 +75,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--policy_hidden_activation", type=str, default="gelu", help="Options: relu/gelu/elu/selu/sigmoid/tanh"
     )
+    parser.add_argument(
+        "--policy_output_activation", type=str, default="linear", help="Options: linear/tanh"
+    )
     parser.add_argument("--policy_min_log_std", type=int, default=-20)
     parser.add_argument("--policy_max_log_std", type=int, default=0.5)
 
@@ -90,7 +90,6 @@ if __name__ == "__main__":
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--tau", type=float, default=0.005)
     parser.add_argument("--auto_alpha", type=bool, default=True)
-    parser.add_argument("--alpha", type=float, default=0.2)
     parser.add_argument("--delay_update", type=int, default=2)
 
     ################################################
@@ -140,7 +139,6 @@ if __name__ == "__main__":
 
     ################################################
     # 7. Data savings
-    #parser.add_argument("--save_folder", type=str, default= "/home/wangwenxuan/gops_idp/gops/results/DSAC2/humanoid_r_0.2_sb_20_si_1_2")
     parser.add_argument("--save_folder", type=str, default= None)
     # Save value/policy every N updates
     parser.add_argument("--apprfunc_save_interval", type=int, default=50000)

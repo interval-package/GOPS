@@ -16,9 +16,10 @@
 
 __all__ = ["ApproxContainer", "DSAC"]
 
+import math
 import time
 from copy import deepcopy
-from typing import Tuple
+from typing import Any, Optional, Tuple
 
 import torch
 import torch.nn as nn
@@ -79,22 +80,33 @@ class DSAC(AlgorithmBase):
     :param float tau: param for soft update of target network.
     :param bool auto_alpha: whether to adjust temperature automatically.
     :param float alpha: initial temperature.
-    :param float TD_bound: the bound of temporal difference.
     :param bool bound: whether to bound the q value.
     :param float delay_update: delay update steps for actor.
     :param Optional[float] target_entropy: target entropy for automatic
         temperature adjustment.
     """
 
-    def __init__(self, index=0, **kwargs):
+    def __init__(
+        self,
+        index: int = 0,
+        gamma: float = 0.99,
+        tau: float = 0.005,
+        alpha: float = math.e,
+        auto_alpha: bool = True,
+        target_entropy: Optional[float] = None,
+        bound: bool = True,
+        **kwargs: Any,
+    ):
         super().__init__(index, **kwargs)
         self.networks = ApproxContainer(**kwargs)
-        self.gamma = kwargs["gamma"]
-        self.tau = kwargs["tau"]
-        self.target_entropy = -kwargs["action_dim"]
-        self.auto_alpha = kwargs["auto_alpha"]
-        self.alpha = kwargs.get("alpha", 0.2)
-        self.bound = kwargs["bound"]
+        self.networks.log_alpha.data.fill_(math.log(alpha))
+        self.gamma = gamma
+        self.tau = tau
+        self.auto_alpha = auto_alpha
+        if target_entropy is None:
+            target_entropy = -kwargs["action_dim"]
+        self.target_entropy = target_entropy
+        self.bound = bound
         self.delay_update = kwargs["delay_update"]
 
     @property
@@ -143,14 +155,11 @@ class DSAC(AlgorithmBase):
         self._update(iteration)
 
     def _get_alpha(self, requires_grad: bool = False):
-        if self.auto_alpha:
-            alpha = self.networks.log_alpha.exp()
-            if requires_grad:
-                return alpha
-            else:
-                return alpha.item()
+        alpha = self.networks.log_alpha.exp()
+        if requires_grad:
+            return alpha
         else:
-            return self.alpha
+            return alpha.item()
 
     def _compute_gradient(self, data: DataDict, iteration: int):
         start_time = time.time()
